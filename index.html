@@ -1,227 +1,93 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دردشة موبايل</title>
-<style>
-/* Reset & full-screen */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Segoe UI', sans-serif;
-  background: #ECE5DD;
-  direction: rtl;
-}
-/* Header */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 56px;
-  background: #075E54;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  z-index: 1000;
-}
-/* Chat area */
-.chat-box {
-  position: absolute;
-  top: 56px;
-  bottom: 56px;
-  left: 0;
-  right: 0;
-  overflow-y: auto;
-  padding: 10px;
-  background: #ECE5DD;
-}
-.message {
-  display: flex;
-  align-items: flex-end;
-  margin: 5px 0;
-}
-.message img {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.bubble {
-  max-width: 75%;
-  padding: 10px;
-  border-radius: 7px;
-  margin: 0 5px;
-  word-wrap: break-word;
-}
-.you {
-  background: #dcf8c6;
-  margin-left: auto;
-}
-.other {
-  background: #fff;
-  margin-right: auto;
-}
-.bubble span {
-  color: #000;
-}
-/* Footer/input */
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 56px;
-  background: #f0f0f0;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  z-index: 1000;
-}
-.footer input {
-  flex: 1;
-  height: 36px;
-  border: none;
-  border-radius: 18px;
-  padding: 0 12px;
-  font-size: 16px;
-  margin-right: 8px;
-  outline: none;
-}
-.footer button {
-  border: none;
-  background: #075E54;
-  color: #fff;
-  border-radius: 18px;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-}
-/* Popup */
-.popup {
-  position: fixed;
-  bottom: 70px;
-  left: 10px;
-  right: 10px;
-  background: rgba(0,0,0,0.8);
-  color: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  display: none;
-  z-index: 2000;
-}
-.popup button {
-  margin: 5px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  background: #25D366;
-  color: #fff;
-  cursor: pointer;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>تجربة الإشعارات 🔔</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-messaging-compat.js"></script>
 </head>
 <body>
+  <h1>📣 تجربة الإشعارات</h1>
+  <button onclick="subscribe()">تفعيل الإشعارات</button>
 
-<div class="header">دردشة</div>
-<div class="chat-box" id="chatBox"></div>
+  <script>
+    // إعداد Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjE-2q6PONBkCin9ZN22gDp9Q8pAH9ZW8",
+      authDomain: "story-97cf7.firebaseapp.com",
+      databaseURL: "https://story-97cf7-default-rtdb.firebaseio.com",
+      projectId: "story-97cf7",
+      storageBucket: "story-97cf7.firebasestorage.app",
+      messagingSenderId: "742801388214",
+      appId: "1:742801388214:web:32a305a8057b0582c5ec17",
+      measurementId: "G-9DPPWX7CF0"
+    };
 
-<div class="footer">
-  <input id="messageInput" type="text" placeholder="اكتب رسالة...">
-  <button onclick="sendMessage()">إرسال</button>
-</div>
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
 
-<div class="popup" id="privatePopup">
-  <p id="popupText"></p>
-  <button onclick="acceptChat()">قبول</button>
-  <button onclick="declineChat()">رفض</button>
-</div>
+    // تفعيل الإشعارات
+    function subscribe() {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          messaging.getToken({
+            vapidKey: "BFw4dlTDr69K6h1XpRPArojfCD4GGEWM1Nlm0QJ6qXHfdpnFmDsVEITJGrpykn7OzVSmflVegkp8EZZW4AEnjJo"
+          }).then((currentToken) => {
+            if (currentToken) {
+              console.log("✅ Token:", currentToken);
+              alert("تم تفعيل الإشعارات! شوف التوكن في الكونسول.");
+            } else {
+              console.log("❌ لا يوجد توكن.");
+            }
+          }).catch((err) => {
+            console.error("🔴 خطأ في الحصول على التوكن:", err);
+          });
+        } else {
+          alert("🚫 تم رفض الإذن.");
+        }
+      });
+    }
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+    // استقبال الإشعارات داخل الموقع
+    messaging.onMessage((payload) => {
+      console.log("📩 إشعار داخل الصفحة:", payload);
+      alert("📩 إشعار: " + payload.notification.title);
+    });
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCCVZ_jGFy84adXaEkMybmCciiY5VlBO0E",
-  authDomain: "saifzx.firebaseapp.com",
-  databaseURL: "https://saifzx-default-rtdb.firebaseio.com",
-  projectId: "saifzx",
-  storageBucket: "saifzx.appspot.com",
-  messagingSenderId: "901309994427",
-  appId: "1:901309994427:web:4607a8faf50d536117a09e",
-  measurementId: "G-ZZTBNGJCKN"
-};
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    // توليد ملف SW تلقائي داخل الصفحة
+    const swCode = `
+      importScripts("https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js");
+      importScripts("https://www.gstatic.com/firebasejs/11.9.1/firebase-messaging-compat.js");
 
-let gender = "";
+      const firebaseConfig = {
+        apiKey: "AIzaSyAjE-2q6PONBkCin9ZN22gDp9Q8pAH9ZW8",
+        authDomain: "story-97cf7.firebaseapp.com",
+        databaseURL: "https://story-97cf7-default-rtdb.firebaseio.com",
+        projectId: "story-97cf7",
+        storageBucket: "story-97cf7.firebasestorage.app",
+        messagingSenderId: "742801388214",
+        appId: "1:742801388214:web:32a305a8057b0582c5ec17",
+        measurementId: "G-9DPPWX7CF0"
+      };
 
-// اختيار النوع
-window.selectGender = function(selectedGender){
-  gender = selectedGender;
-  // يمكنك إضافة شاشة اختيار هنا إذا أردت
-};
+      firebase.initializeApp(firebaseConfig);
+      const messaging = firebase.messaging();
+    `;
 
-// إرسال رسالة عامة
-window.sendMessage = function(){
-  const inp = document.getElementById("messageInput");
-  const text = inp.value.trim();
-  if(!text) return;
-  push(ref(db, "messages"), { gender, text });
-  inp.value = "";
-};
+    const blob = new Blob([swCode], { type: "application/javascript" });
+    const swUrl = URL.createObjectURL(blob);
 
-// أيقونات
-function getIcon(g){
-  return g === "male" 
-    ? "https://cdn-icons-png.flaticon.com/512/2922/2922510.png" 
-    : "https://cdn-icons-png.flaticon.com/512/2922/2922561.png";
-}
-
-const chatBox = document.getElementById("chatBox");
-
-// عرض الرسائل العامة
-onChildAdded(ref(db, "messages"), snapshot => {
-  const msg = snapshot.val();
-  const el = document.createElement("div");
-  el.className = 'message';
-  el.innerHTML = `
-    <img src="${getIcon(msg.gender)}" onclick="startPrivateChat('${msg.gender}')">
-    <div class="bubble ${msg.gender===gender?'you':'other'}"><span>${msg.text}</span></div>
-  `;
-  chatBox.appendChild(el);
-  chatBox.scrollTop = chatBox.scrollHeight;
-});
-
-// طلب دردشة خاصة
-window.startPrivateChat = function(otherGender){
-  if(otherGender===gender) return;
-  push(ref(db, "privateRequests"), { from: gender, to: otherGender });
-};
-
-// مراقبة طلبات الدردشة الخاصة
-onChildAdded(ref(db, "privateRequests"), snapshot => {
-  const req = snapshot.val();
-  if(req.to!==gender) return;
-  const pop = document.getElementById("privatePopup");
-  document.getElementById("popupText").innerText = `مستخدم من نوع ${req.from} طلب دردشة خاصة`;
-  pop.style.display = 'block';
-});
-
-// قبول/رفض الدردشة الخاصة
-window.acceptChat = function(){
-  alert('تم قبول الدردشة الخاصة!');
-  document.getElementById("privatePopup").style.display = 'none';
-};
-window.declineChat = function(){
-  alert('تم رفض الدردشة الخاصة');
-  document.getElementById("privatePopup").style.display = 'none';
-};
-</script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register(swUrl)
+        .then((registration) => {
+          console.log("🛠️ Service Worker مسجل:", registration);
+          messaging.useServiceWorker(registration);
+        })
+        .catch((err) => {
+          console.error("❌ فشل تسجيل Service Worker:", err);
+        });
+    }
+  </script>
 </body>
 </html>
