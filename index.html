@@ -13,8 +13,8 @@
             --sent-bubble: #005c4b;
             --received-bubble: #202c33;
             --danger-red: #f15c5c;
-            --seen-blue: #53bdeb; /* --- NEW: Color for seen ticks --- */
-            --subtle-text: #8696a0;
+            --status-blue: #53bdeb; /* لون علامات الصح الزرقاء */
+            --light-gray: #8696a0;
         }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
         html, body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: var(--primary-bg); color: var(--text-color); height: 100%; width: 100%; overflow: hidden; }
@@ -35,30 +35,34 @@
         #search-input { margin: 0; flex-grow: 1; text-align: right; }
         #search-button { margin: 0; padding: 10px 20px; width: auto; }
         #contacts-container { flex-grow: 1; overflow-y: auto; width: 100%; }
-        .contact-item { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid #1a242a; cursor: pointer; text-align: right; width: 100%; box-sizing: border-box; position: relative; }
+        .contact-item { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid #1a242a; cursor: pointer; text-align: right; width: 100%; box-sizing: border-box; }
         .contact-item:hover { background: #2a3942; }
         .contact-item img { width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; background: #333; }
-        .contact-info { flex-grow: 1; }
-        .contact-meta { position: absolute; left: 12px; top: 12px; text-align: left; font-size: 12px; color: var(--subtle-text); }
-        .unread-badge { background-color: var(--accent-green); color: white; border-radius: 50%; font-size: 12px; font-weight: bold; padding: 2px 7px; min-width: 20px; text-align: center; position: absolute; left: 12px; bottom: 12px; }
-        #no-contacts-message { padding: 40px 20px; color: #8696a0; }
+        .contact-info { flex-grow: 1; display: flex; flex-direction: column; }
+        .contact-info-top { display: flex; justify-content: space-between; align-items: center; }
+        .contact-info-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+        .last-message { font-size: 14px; color: var(--light-gray); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .message-time { font-size: 12px; color: var(--light-gray); }
+        .unread-badge { background-color: var(--accent-green); color: var(--primary-bg); font-size: 12px; font-weight: bold; border-radius: 50%; min-width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; padding: 0 6px; }
+        #no-contacts-message { padding: 40px 20px; color: var(--light-gray); }
         #chat-page { background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png"); }
         #chat-page-header { justify-content: flex-start; }
         #chat-partner-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #333; margin-left: 10px; }
         #messages-area { flex-grow: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
-        .message { display: flex; flex-direction: column; max-width: 70%; padding: 6px 9px; border-radius: 8px; margin-bottom: 10px; color: white; word-wrap: break-word; line-height: 1.4; position: relative; }
-        .message .message-content { padding-right: 50px; } /* --- NEW: space for timestamp and ticks --- */
+        .message { display: flex; flex-direction: column; max-width: 70%; padding: 6px 10px; border-radius: 8px; margin-bottom: 10px; color: white; word-wrap: break-word; line-height: 1.4; position: relative; }
         .message img, .message video { max-width: 100%; border-radius: 5px; margin-top: 5px; }
         .message audio { width: 250px; filter: invert(1) sepia(1) saturate(0) hue-rotate(180deg); }
-        .message-meta { position: absolute; bottom: 4px; right: 8px; font-size: 11px; color: #ffffff99; display: flex; align-items: center; }
-        .message-meta .ticks { font-weight: bold; margin-left: 3px; font-size: 16px; }
-        .message-meta .ticks.seen { color: var(--seen-blue); }
+        .message-content { padding-bottom: 18px; } /* Add padding for meta */
+        .message-meta { position: absolute; bottom: 4px; right: 8px; font-size: 11px; color: var(--light-gray); display: flex; align-items: center; }
+        .received .message-meta { right: auto; left: 8px; } /* Meta for received messages */
+        .message-status { margin-left: 5px; font-weight: bold; font-size: 16px; }
+        .status-read { color: var(--status-blue); }
         .sent { background: var(--sent-bubble); align-self: flex-end; }
         .received { background: var(--received-bubble); align-self: flex-start; }
         #message-form { display: flex; padding: 8px; align-items: center; background: var(--primary-bg); width: 100%; box-sizing: border-box; flex-shrink: 0; }
         #message-input { flex-grow: 1; padding: 12px 15px; border-radius: 20px; border: none; background: var(--secondary-bg); color: white; margin: 0 8px; }
         .action-button { min-width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: var(--accent-green); color: white; font-size: 24px; cursor: pointer; border: none; padding: 0; margin: 0; }
-        #attachment-button { background: none; color: #8696a0; font-size: 26px; transform: rotate(45deg); }
+        #attachment-button { background: none; color: var(--light-gray); font-size: 26px; transform: rotate(45deg); }
         #record-button, #send-button { display: none; }
         #recording-ui { display: none; flex-grow: 1; height: 48px; background-color: var(--secondary-bg); border-radius: 20px; margin: 0 8px; padding: 0 10px; align-items: center; justify-content: space-between; }
         #cancel-record-button { background: none; color: var(--danger-red); font-size: 24px; }
@@ -75,16 +79,17 @@
 <div id="chat-list-page" class="page">
     <header id="chat-list-page-header"><img id="my-profile-button" src="https://via.placeholder.com/150/333333/FFFFFF?text=Me"><h2>الدردشات</h2></header>
     <div class="content">
-        <form id="search-form" onsubmit="return false;">
-            <input type="search" id="search-input" placeholder="ابحث برقم الهاتف الكامل...">
+        <form id="search-form" onsubmit="return false;"> <input type="search" id="search-input" placeholder="ابحث برقم الهاتف الكامل...">
             <button type="submit" id="search-button">بحث</button>
         </form>
-        <div id="contacts-container"><div id="no-contacts-message"><h3>لا توجد دردشات بعد</h3><p>ابحث عن مستخدم باستخدام رقم هاتفه لبدء محادثة جديدة.</p></div></div>
+        <div id="contacts-container">
+            <div id="no-contacts-message"><h3>لا توجد دردشات بعد</h3><p>ابحث عن مستخدم باستخدام رقم هاتفه لبدء محادثة جديدة.</p></div>
+        </div>
     </div>
 </div>
 
 <div id="profile-settings-page" class="page"><header><button class="back-button" data-target="chat-list-page">→ </button><h1>الملف الشخصي</h1></header><div class="content"><div class="profile-pic-container"><label for="edit-pic-input"><img id="edit-pic-preview" class="profile-pic-preview"><div class="profile-pic-overlay">📷</div></label><input type="file" id="edit-pic-input" accept="image/*" style="display:none;"></div><input type="text" id="edit-name-input" placeholder="الاسم"><input type="tel" id="edit-phone-input" placeholder="رقم الهاتف" readonly style="background:#111b21; text-align:center;"><button id="save-profile-button">حفظ</button></div></div>
-<div id="chat-page" class="page"><header id="chat-page-header"><button class="back-button" data-target="chat-list-page">→ </button><img id="chat-partner-avatar"><h3 id="chat-partner-name" style="margin-right: 15px;"></h3></header><div id="messages-area"></div><form id="message-form" onsubmit="return false;"><button type="button" id="attachment-button" class="action-button">📎</button><input type="file" id="attachment-input" accept="image/,video/" style="display:none;"><input type="text" id="message-input" placeholder="رسالة"><div id="recording-ui"><button type="button" id="cancel-record-button" class="action-button" title="إلغاء">🗑</button><div id="recording-status"><span id="record-timer">0:00</span><span class="red-dot">●</span></div></div><button type="button" id="record-button" class="action-button">🎤</button><button type="submit" id="send-button" class="action-button">➤</button></form></div>
+<div id="chat-page" class="page"><header id="chat-page-header"><button class="back-button" data-target="chat-list-page">→ </button><img id="chat-partner-avatar"><h3 id="chat-partner-name" style="margin-right: 15px;"></h3></header><div id="messages-area"></div><form id="message-form" onsubmit="return false;"><button type="button" id="attachment-button" class="action-button">📎</button><input type="file" id="attachment-input" accept="image/*,video/*" style="display:none;"><input type="text" id="message-input" placeholder="رسالة"><div id="recording-ui"><button type="button" id="cancel-record-button" class="action-button" title="إلغاء">🗑️</button><div id="recording-status"><span id="record-timer">0:00</span><span class="red-dot">●</span></div></div><button type="button" id="record-button" class="action-button">🎤</button><button type="submit" id="send-button" class="action-button">➤</button></form></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -104,236 +109,222 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
         
-        let currentUser = null, activeChatPartner = null, registrationData = { avatar: "https://via.placeholder.com/150/333333/FFFFFF?text=User" };
-        let currentMessagesRef = null, currentMessagesListener = null, userChatsListener = null;
+        let currentUser = null, activeChatPartner = null;
+        let currentMessagesRef = null, currentMessagesListener = null;
+        let userChatsListener = null;
         let mediaRecorder, audioChunks = [], recordTimerInterval, isRecording = false;
 
         const ui = {
             pages: document.querySelectorAll('.page'), backButtons: document.querySelectorAll('.back-button'), agreeButton: document.getElementById('agree-button'), phoneNextButton: document.getElementById('phone-next-button'), phoneInput: document.getElementById('phone-input'), registerPicInput: document.getElementById('register-pic-input'), registerPicPreview: document.getElementById('register-pic-preview'), registerNameInput: document.getElementById('register-name-input'), registerFinishButton: document.getElementById('register-finish-button'), myProfileButton: document.getElementById('my-profile-button'),
-            searchForm: document.getElementById('search-form'), searchInput: document.getElementById('search-input'), searchButton: document.getElementById('search-button'),
+            searchForm: document.getElementById('search-form'), searchInput: document.getElementById('search-input'),
             contactsContainer: document.getElementById('contacts-container'), noContactsMessage: document.getElementById('no-contacts-message'), editPicPreview: document.getElementById('edit-pic-preview'), editPicInput: document.getElementById('edit-pic-input'), editNameInput: document.getElementById('edit-name-input'), editPhoneInput: document.getElementById('edit-phone-input'), saveProfileButton: document.getElementById('save-profile-button'), chatPartnerName: document.getElementById('chat-partner-name'), chatPartnerAvatar: document.getElementById('chat-partner-avatar'), messagesArea: document.getElementById('messages-area'), messageForm: document.getElementById('message-form'), messageInput: document.getElementById('message-input'), sendButton: document.getElementById('send-button'), recordButton: document.getElementById('record-button'), attachmentButton: document.getElementById('attachment-button'), attachmentInput: document.getElementById('attachment-input'), recordingUi: document.getElementById('recording-ui'), cancelRecordButton: document.getElementById('cancel-record-button'), recordTimer: document.getElementById('record-timer')
         };
         
-        const navigateTo = (pageId) => { ui.pages.forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); if(pageId === 'chat-list-page' && currentUser) { loadUserChats(); }};
+        const navigateTo = (pageId) => { ui.pages.forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); };
         const fileToBase64 = (file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
-        const startApp = async () => { const savedUserId = localStorage.getItem('whatsapp_currentUser_id'); if (savedUserId) { try { const snapshot = await get(ref(database, 'users/' + savedUserId)); if (snapshot.exists()) { currentUser = snapshot.val(); initializeAppUI(); navigateTo('chat-list-page'); } else { localStorage.removeItem('whatsapp_currentUser_id'); navigateTo('welcome-page'); } } catch (error) { console.error("DB connection failed:", error); alert("فشل الاتصال بقاعدة البيانات."); navigateTo('welcome-page'); } } else { navigateTo('welcome-page'); } };
+        const startApp = async () => { const savedUserId = localStorage.getItem('whatsapp_currentUser_id'); if (savedUserId) { const snapshot = await get(ref(database, 'users/' + savedUserId)); if (snapshot.exists()) { currentUser = snapshot.val(); initializeAppUI(); navigateTo('chat-list-page'); } else { localStorage.removeItem('whatsapp_currentUser_id'); navigateTo('welcome-page'); } } else { navigateTo('welcome-page'); } };
         ui.agreeButton.onclick = () => navigateTo('phone-page');
-        ui.phoneNextButton.onclick = async () => { const phone = ui.phoneInput.value.trim(); if (phone.length < 9) { alert('الرجاء إدخال رقم هاتف صحيح'); return; } const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(phone)); const snapshot = await get(usersQuery); if (snapshot.exists()) { alert("هذا الرقم مسجل بالفعل. سيتم تسجيل دخولك."); snapshot.forEach(child => { currentUser = child.val(); }); localStorage.setItem('whatsapp_currentUser_id', currentUser.id); initializeAppUI(); navigateTo('chat-list-page'); } else { registrationData.phone = phone; navigateTo('profile-page'); } };
+        ui.phoneNextButton.onclick = async () => { const phone = ui.phoneInput.value.trim(); if (phone.length < 9) { alert('الرجاء إدخال رقم هاتف صحيح'); return; } const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(phone)); const snapshot = await get(usersQuery); if (snapshot.exists()) { snapshot.forEach(child => { currentUser = child.val(); }); localStorage.setItem('whatsapp_currentUser_id', currentUser.id); initializeAppUI(); navigateTo('chat-list-page'); } else { registrationData.phone = phone; navigateTo('profile-page'); } };
+        const registrationData = { avatar: "https://via.placeholder.com/150/333333/FFFFFF?text=User" };
         ui.registerPicInput.onchange = async (e) => { const file = e.target.files[0]; if (file) { ui.registerPicPreview.src = await fileToBase64(file); registrationData.avatar = ui.registerPicPreview.src; } };
-        ui.registerFinishButton.onclick = async () => { const name = ui.registerNameInput.value.trim(); if (!name) { alert('الرجاء إدخال اسمك'); return; } registrationData.name = name; const userId = user_${Date.now()}; const newUser = { id: userId, ...registrationData, chats: {} }; try { await set(ref(database, 'users/' + userId), newUser); currentUser = newUser; localStorage.setItem('whatsapp_currentUser_id', currentUser.id); alert(تم تسجيل "${name}" بنجاح!); initializeAppUI(); navigateTo('chat-list-page'); } catch (error) { console.error("Error saving user:", error); alert("حدث خطأ أثناء التسجيل."); } };
-        const initializeAppUI = () => { if (!currentUser) return; ui.myProfileButton.src = currentUser.avatar; };
-
-        // --- MODIFIED: Search Logic ---
-        ui.searchButton.onclick = async () => {
-            const searchTerm = ui.searchInput.value.trim();
-            if (!searchTerm || !currentUser) return;
-            if (searchTerm === currentUser.phone) { alert("لا يمكنك بدء محادثة مع نفسك."); return; }
-            const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(searchTerm));
-            const snapshot = await get(usersQuery);
-            if (snapshot.exists()) {
-                snapshot.forEach(child => { openChat(child.val()); });
-            } else {
-                alert("لم يتم العثور على مستخدم بهذا الرقم.");
-            }
-        };
-
-        // --- NEW: Load User's Chat List ---
+        ui.registerFinishButton.onclick = async () => { const name = ui.registerNameInput.value.trim(); if (!name) { alert('الرجاء إدخال اسمك'); return; } registrationData.name = name; const userId = `user_${Date.now()}`; const newUser = { id: userId, ...registrationData }; await set(ref(database, 'users/' + userId), newUser); currentUser = newUser; localStorage.setItem('whatsapp_currentUser_id', currentUser.id); initializeAppUI(); navigateTo('chat-list-page'); };
+        
+        const initializeAppUI = () => { if (!currentUser) return; ui.myProfileButton.src = currentUser.avatar; loadUserChats(); };
+        
+        // --- NEW FUNCTION: Load and display user's ongoing chats ---
         const loadUserChats = () => {
-            if (userChatsListener) off(ref(database, 'users/' + currentUser.id + '/chats'), 'value', userChatsListener);
+            if (userChatsListener) off(ref(database, `userChats/${currentUser.id}`), 'value', userChatsListener);
             
-            const chatsRef = query(ref(database, 'users/' + currentUser.id + '/chats'), orderByChild('timestamp'));
-            userChatsListener = onValue(chatsRef, async (snapshot) => {
+            const chatsQuery = query(ref(database, `userChats/${currentUser.id}`), orderByChild('timestamp'));
+            
+            userChatsListener = onValue(chatsQuery, async (snapshot) => {
                 ui.contactsContainer.innerHTML = '';
-                if (!snapshot.exists() || snapshot.val() === null) {
-                    ui.contactsContainer.appendChild(ui.noContactsMessage);
+                if (!snapshot.exists()) {
                     ui.noContactsMessage.style.display = 'block';
                     return;
                 }
                 ui.noContactsMessage.style.display = 'none';
 
-                const chats = [];
-                snapshot.forEach(child => { chats.push({ partnerId: child.key, ...child.val() }); });
-                chats.sort((a, b) => b.timestamp - a.timestamp); // Sort descending by timestamp
+                const chatPromises = [];
+                snapshot.forEach(child => {
+                    const chatData = child.val();
+                    const promise = get(ref(database, `users/${chatData.partnerId}`)).then(userSnap => {
+                        return { ...chatData, partner: userSnap.val() };
+                    });
+                    chatPromises.push(promise);
+                });
 
-                for (const chat of chats) {
-                    const userSnap = await get(ref(database, 'users/' + chat.partnerId));
-                    if(userSnap.exists()){
-                        const partner = userSnap.val();
-                        const contactDiv = document.createElement('div');
-                        contactDiv.className = 'contact-item';
-                        contactDiv.onclick = () => openChat(partner);
-                        
-                        let lastMessageText = '';
-                        if (chat.lastMessage) {
-                           switch(chat.lastMessageType) {
-                                case 'text': lastMessageText = chat.lastMessage.length > 25 ? chat.lastMessage.substring(0, 25) + '...' : chat.lastMessage; break;
-                                case 'image': lastMessageText = '📷 صورة'; break;
-                                case 'audio': lastMessageText = '🎤 رسالة صوتية'; break;
-                                default: lastMessageText = chat.lastMessage;
-                           }
+                const chats = (await Promise.all(chatPromises)).reverse(); // Reverse to show newest first
+
+                chats.forEach(chat => {
+                    if(!chat.partner) return; // Skip if partner data is missing
+                    const contactDiv = document.createElement('div');
+                    contactDiv.className = 'contact-item';
+
+                    let lastMessageText = '';
+                    if (chat.lastMessage) {
+                        switch(chat.lastMessage.type) {
+                            case 'text': lastMessageText = chat.lastMessage.content; break;
+                            case 'image': lastMessageText = '📷 صورة'; break;
+                            case 'audio': lastMessageText = '🎤 رسالة صوتية'; break;
                         }
-
-                        const chatDate = new Date(chat.timestamp).toLocaleTimeString('ar-EG', { hour: 'numeric', minute: '2-digit'});
-
-                        contactDiv.innerHTML = `
-                            <img src="${partner.avatar}" alt="${partner.name}">
-                            <div class="contact-info">
-                                <h4>${partner.name}</h4>
-                                <p style="color:#a0a0a0; font-size:14px;">${lastMessageText}</p>
-                            </div>
-                            <div class="contact-meta">
-                                <span class="time">${chatDate}</span>
-                            </div>
-                            ${chat.unreadCount > 0 ? <div class="unread-badge">${chat.unreadCount}</div> : ''}
-                        `;
-                        ui.contactsContainer.appendChild(contactDiv);
                     }
-                }
+
+                    const messageDate = new Date(chat.timestamp);
+                    const messageTime = messageDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+                    contactDiv.innerHTML = `
+                        <img src="${chat.partner.avatar}" alt="${chat.partner.name}">
+                        <div class="contact-info">
+                            <div class="contact-info-top">
+                                <h4>${chat.partner.name}</h4>
+                                <span class="message-time">${messageTime}</span>
+                            </div>
+                            <div class="contact-info-bottom">
+                                <span class="last-message">${lastMessageText}</span>
+                                ${chat.unreadCount > 0 ? `<span class="unread-badge">${chat.unreadCount}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    contactDiv.onclick = () => openChat(chat.partner);
+                    ui.contactsContainer.appendChild(contactDiv);
+                });
             });
         };
         
-        // --- MODIFIED: Open Chat Logic ---
-        const openChat = async (partner) => {
-            activeChatPartner = partner;
-            ui.chatPartnerName.textContent = partner.name;
-            ui.chatPartnerAvatar.src = partner.avatar;
-            navigateTo('chat-page');
-            loadAndListenForMessages();
-            
-            // Reset unread count for this chat
-            const chatInfoRef = ref(database, users/${currentUser.id}/chats/${partner.id});
-            const chatInfoSnap = await get(chatInfoRef);
-            if (chatInfoSnap.exists() && chatInfoSnap.val().unreadCount > 0) {
-                await update(chatInfoRef, { unreadCount: 0 });
-            }
-        };
+        ui.searchForm.onsubmit = async (event) => {
+            event.preventDefault();
+            const searchTerm = ui.searchInput.value.trim();
+            if (!searchTerm) return;
 
-        // --- MODIFIED: Message Handling Logic ---
-        const loadAndListenForMessages = () => {
-            if (currentMessagesRef && currentMessagesListener) { off(currentMessagesRef, 'value', currentMessagesListener); }
-            const chatId = [currentUser.id, activeChatPartner.id].sort().join('_');
-            currentMessagesRef = ref(database, 'messages/' + chatId);
+            const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(searchTerm));
+            const snapshot = await get(usersQuery);
             
-            ui.messagesArea.innerHTML = '';
-            
-            currentMessagesListener = onValue(query(currentMessagesRef, orderByChild('timestamp')), async (snapshot) => {
-                ui.messagesArea.innerHTML = '';
-                if (!snapshot.exists()) return;
-
-                const updates = {};
+            if (snapshot.exists()) {
                 snapshot.forEach(child => {
-                    const msg = { key: child.key, ...child.val() };
-                    // If message is from partner and not 'seen', update status
-                    if (msg.senderId === activeChatPartner.id && msg.status !== 'seen') {
-                        updates[child.key + '/status'] = 'seen';
+                    const user = child.val();
+                    if (user.id === currentUser.id) {
+                        alert("لا يمكنك بدء محادثة مع نفسك."); return;
                     }
-                    displayMessage(msg);
+                    openChat(user);
                 });
-
-                // Apply status updates in batch
-                if (Object.keys(updates).length > 0) {
-                    await update(ref(database, 'messages/' + chatId), updates);
-                }
-
-                ui.messagesArea.scrollTop = ui.messagesArea.scrollHeight;
-            }, (error) => console.error("Error listening for messages:", error));
-        };
-
-        // --- MODIFIED: Send Message Logic ---
-        const sendMessage = async (messageData) => {
-            if (!messageData.content) return;
-            const chatId = [currentUser.id, activeChatPartner.id].sort().join('_');
-            const messagesRef = ref(database, 'messages/' + chatId);
-            
-            const fullMessage = {
-                ...messageData,
-                senderId: currentUser.id,
-                receiverId: activeChatPartner.id,
-                timestamp: serverTimestamp(),
-                status: 'sent' // Initial status
-            };
-            
-            try {
-                await push(messagesRef, fullMessage);
-
-                // Update chat metadata for both users
-                const chatTimestamp = Date.now();
-                const senderChatRef = ref(database, users/${currentUser.id}/chats/${activeChatPartner.id});
-                const receiverChatRef = ref(database, users/${activeChatPartner.id}/chats/${currentUser.id});
-
-                await set(senderChatRef, {
-                    lastMessage: messageData.content,
-                    lastMessageType: messageData.type,
-                    timestamp: chatTimestamp,
-                    unreadCount: 0 // Sender has no unread messages
-                });
-                
-                await set(receiverChatRef, {
-                    lastMessage: messageData.content,
-                    lastMessageType: messageData.type,
-                    timestamp: chatTimestamp,
-                    unreadCount: increment(1) // Increment receiver's unread count
-                });
-                
-            } catch(e) {
-                console.error("Message send error:", e);
-                alert("فشل إرسال الرسالة");
+            } else {
+                alert("لم يتم العثور على مستخدم بهذا الرقم.");
             }
         };
 
-        // --- MODIFIED: Display Message Logic ---
+        const openChat = async (partner) => { 
+            activeChatPartner = partner; 
+            ui.chatPartnerName.textContent = partner.name; 
+            ui.chatPartnerAvatar.src = partner.avatar; 
+            navigateTo('chat-page'); 
+            loadAndListenForMessages();
+            // --- NEW: Reset unread count when chat is opened ---
+            const chatId = [currentUser.id, activeChatPartner.id].sort().join('_');
+            await set(ref(database, `userChats/${currentUser.id}/${chatId}/unreadCount`), 0);
+        };
+
+        const loadAndListenForMessages = () => { 
+            if (currentMessagesRef && currentMessagesListener) off(currentMessagesRef, 'value', currentMessagesListener); 
+            const chatId = [currentUser.id, activeChatPartner.id].sort().join('_'); 
+            currentMessagesRef = query(ref(database, 'messages/' + chatId), orderByChild('timestamp')); 
+            ui.messagesArea.innerHTML = ''; 
+            
+            currentMessagesListener = onValue(currentMessagesRef, (snapshot) => { 
+                ui.messagesArea.innerHTML = ''; 
+                if (snapshot.exists()) { 
+                    snapshot.forEach(child => { 
+                        const msg = child.val();
+                        const msgId = child.key;
+                        displayMessage(msg);
+                        // --- NEW: Mark message as read ---
+                        if (msg.receiverId === currentUser.id && msg.status !== 'read') {
+                            update(ref(database, `messages/${chatId}/${msgId}`), { status: 'read' });
+                        }
+                    }); 
+                } 
+                ui.messagesArea.scrollTop = ui.messagesArea.scrollHeight; 
+            }); 
+        };
+
+        const sendMessage = async (messageData) => { 
+            if (!messageData.content) return; 
+            const chatId = [currentUser.id, activeChatPartner.id].sort().join('_'); 
+            const messageTimestamp = serverTimestamp();
+            const fullMessage = { ...messageData, senderId: currentUser.id, receiverId: activeChatPartner.id, timestamp: messageTimestamp, status: 'sent' }; 
+            
+            await push(ref(database, 'messages/' + chatId), fullMessage);
+            
+            // --- NEW: Update chat list for both users ---
+            const chatInfo = {
+                partnerId: activeChatPartner.id,
+                lastMessage: messageData,
+                timestamp: messageTimestamp,
+                unreadCount: 0
+            };
+            await set(ref(database, `userChats/${currentUser.id}/${chatId}`), chatInfo);
+
+            const chatInfoForPartner = {
+                partnerId: currentUser.id,
+                lastMessage: messageData,
+                timestamp: messageTimestamp,
+                unreadCount: increment(1) // Increment unread count for the receiver
+            };
+            await update(ref(database, `userChats/${activeChatPartner.id}/${chatId}`), chatInfoForPartner);
+        };
+        
         const displayMessage = (msg) => {
             const div = document.createElement('div');
-            div.className = message ${msg.senderId === currentUser.id ? 'sent' : 'received'};
-            
+            div.className = `message ${msg.senderId === currentUser.id ? 'sent' : 'received'}`;
             let contentHtml = '';
+            
             switch(msg.type) {
                 case 'text': contentHtml = msg.content.replace(/\n/g, '<br>'); break;
-                case 'image': contentHtml = <img src="${msg.content}" alt="صورة">; break;
-                case 'audio': contentHtml = <audio controls src="${msg.content}"></audio>; break;
+                case 'image': contentHtml = `<img src="${msg.content}" alt="صورة">`; break;
+                case 'audio': contentHtml = `<audio controls src="${msg.content}"></audio>`; break;
                 default: contentHtml = 'رسالة غير مدعومة';
             }
             
-            const msgDate = new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: 'numeric', minute: '2-digit'});
-            
-            let ticks = '';
+            const messageTime = new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+            // --- NEW: Message status logic ---
+            let statusIcon = '';
             if (msg.senderId === currentUser.id) {
-                if (msg.status === 'seen') {
-                    ticks = '<span class="ticks seen">✓✓</span>';
-                } else if (msg.status === 'delivered') { // Note: for simplicity, we jump from sent to seen. Add delivered logic if needed.
-                    ticks = '<span class="ticks">✓✓</span>';
-                } else {
-                    ticks = '<span class="ticks">✓</span>';
+                if (msg.status === 'read') {
+                    statusIcon = '<span class="message-status status-read">✓✓</span>';
+                } else if (msg.status === 'sent') {
+                    statusIcon = '<span class="message-status">✓</span>';
                 }
             }
             
-            div.innerHTML = <div class="message-content">${contentHtml}</div><div class="message-meta"><span>${msgDate}</span>${ticks}</div>;
+            div.innerHTML = `
+                <div class="message-content">${contentHtml}</div>
+                <div class="message-meta">
+                    <span>${messageTime}</span>
+                    ${statusIcon}
+                </div>
+            `;
             ui.messagesArea.appendChild(div);
-
-            // Update status to 'delivered' if received
-            if(msg.senderId === activeChatPartner.id && msg.status === 'sent') {
-                 const msgRef = ref(database, messages/${[currentUser.id, activeChatPartner.id].sort().join('_')}/${msg.key});
-                 update(msgRef, { status: 'delivered' });
-            }
         };
 
+        // --- All other functions (recording, profile editing, etc.) remain the same ---
         const setRecordingUI = (isRecordingActive) => { isRecording = isRecordingActive; ui.messageInput.style.display = isRecordingActive ? 'none' : 'flex'; ui.attachmentButton.style.display = isRecordingActive ? 'none' : 'flex'; ui.recordingUi.style.display = isRecordingActive ? 'flex' : 'none'; ui.messageInput.dispatchEvent(new Event('input')); };
         ui.messageInput.oninput = () => { if (isRecording) return; const hasText = ui.messageInput.value.trim() !== ''; ui.sendButton.style.display = hasText ? 'flex' : 'none'; ui.recordButton.style.display = hasText ? 'none' : 'flex'; };
         ui.messageForm.onsubmit = () => { if (isRecording) { if (mediaRecorder && mediaRecorder.state === "recording") { mediaRecorder.stop(); } } else { const text = ui.messageInput.value.trim(); if (text) { sendMessage({ type: 'text', content: text }); ui.messageInput.value = ''; ui.messageInput.dispatchEvent(new Event('input')); } } return false; };
-        ui.recordButton.onclick = async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); mediaRecorder = new MediaRecorder(stream); audioChunks = []; mediaRecorder.start(); setRecordingUI(true); let seconds = 0; ui.recordTimer.textContent = '0:00'; recordTimerInterval = setInterval(() => { seconds++; const mins = Math.floor(seconds / 60); const secs = seconds % 60; ui.recordTimer.textContent = ${mins}:${secs.toString().padStart(2, '0')}; }, 1000); mediaRecorder.ondataavailable = event => audioChunks.push(event.data); mediaRecorder.onstop = async () => { clearInterval(recordTimerInterval); const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); const base64Audio = await fileToBase64(audioBlob); sendMessage({ type: 'audio', content: base64Audio }); setRecordingUI(false); stream.getTracks().forEach(track => track.stop()); }; } catch (error) { console.error("Microphone access error:", error); alert("لا يمكن الوصول إلى الميكروفون. الرجاء منح الإذن."); setRecordingUI(false); } };
+        ui.recordButton.onclick = async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); mediaRecorder = new MediaRecorder(stream); audioChunks = []; mediaRecorder.start(); setRecordingUI(true); let seconds = 0; ui.recordTimer.textContent = '0:00'; recordTimerInterval = setInterval(() => { seconds++; const mins = Math.floor(seconds / 60); const secs = seconds % 60; ui.recordTimer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`; }, 1000); mediaRecorder.ondataavailable = event => audioChunks.push(event.data); mediaRecorder.onstop = async () => { clearInterval(recordTimerInterval); const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); const base64Audio = await fileToBase64(audioBlob); sendMessage({ type: 'audio', content: base64Audio }); setRecordingUI(false); stream.getTracks().forEach(track => track.stop()); }; } catch (error) { console.error("Microphone access error:", error); alert("لا يمكن الوصول إلى الميكروفون. الرجاء منح الإذن."); setRecordingUI(false); } };
         ui.cancelRecordButton.onclick = () => { if (mediaRecorder && mediaRecorder.state === "recording") { mediaRecorder.onstop = () => { if(mediaRecorder.stream) mediaRecorder.stream.getTracks().forEach(track => track.stop()); }; mediaRecorder.stop(); } clearInterval(recordTimerInterval); audioChunks = []; setRecordingUI(false); };
         ui.attachmentButton.onclick = () => ui.attachmentInput.click();
         ui.attachmentInput.onchange = async (e) => { const file = e.target.files[0]; if (file) { const base64Content = await fileToBase64(file); const type = file.type.startsWith('image/') ? 'image' : 'video'; if (type === 'video') { alert("ميزة إرسال الفيديو غير مدعومة حالياً."); return; } sendMessage({ type: 'image', content: base64Content }); } e.target.value = null; };
         ui.myProfileButton.onclick = () => { ui.editPicPreview.src = currentUser.avatar; ui.editNameInput.value = currentUser.name; ui.editPhoneInput.value = currentUser.phone; navigateTo('profile-settings-page'); };
         ui.editPicInput.onchange = async (e) => { const file = e.target.files[0]; if (file) { ui.editPicPreview.src = await fileToBase64(file); } };
-        ui.saveProfileButton.onclick = async () => { const newName = ui.editNameInput.value.trim(); const newAvatar = ui.editPicPreview.src; if(!newName) { alert("الاسم لا يمكن أن يكون فارغاً"); return; } const updatedData = { ...currentUser, name: newName, avatar: newAvatar }; try { await set(ref(database, 'users/' + currentUser.id), updatedData); currentUser = updatedData; alert("تم حفظ التغييرات!"); initializeAppUI(); navigateTo('chat-list-page'); } catch(error) { console.error("Profile update error:", error); alert("فشل تحديث الملف الشخصي."); } };
-        ui.backButtons.forEach(b => { b.onclick = () => { if (isRecording) ui.cancelRecordButton.click(); if (currentMessagesRef && currentMessagesListener) { off(currentMessagesRef, 'value', currentMessagesListener); currentMessagesRef = null; currentMessagesListener = null; } if (userChatsListener) { off(ref(database, 'users/' + currentUser.id + '/chats'), 'value', userChatsListener); userChatsListener = null;} navigateTo(b.dataset.target); }; });
+        ui.saveProfileButton.onclick = async () => { const newName = ui.editNameInput.value.trim(); const newAvatar = ui.editPicPreview.src; if(!newName) { alert("الاسم لا يمكن أن يكون فارغاً"); return; } const updatedData = { ...currentUser, name: newName, avatar: newAvatar }; await set(ref(database, 'users/' + currentUser.id), updatedData); currentUser = updatedData; alert("تم حفظ التغييرات!"); initializeAppUI(); navigateTo('chat-list-page'); };
+        ui.backButtons.forEach(b => { b.onclick = () => { if (isRecording) ui.cancelRecordButton.click(); if (currentMessagesRef && currentMessagesListener) { off(currentMessagesRef, 'value', currentMessagesListener); currentMessagesRef = null; currentMessagesListener = null; } navigateTo(b.dataset.target); }; });
 
         startApp();
         ui.messageInput.dispatchEvent(new Event('input'));
     } catch (e) {
         console.error("Firebase init failed.", e);
-        document.body.innerHTML = <div style="text-align:center; padding: 40px; color: red;"><h1>خطأ فادح في إعدادات التطبيق.</h1><p>لا يمكن تشغيل التطبيق. يرجى مراجعة إعدادات Firebase في الكود.</p><p>${e.message}</p></div>;
+        document.body.innerHTML = `<div style="text-align:center; padding: 40px; color: red;"><h1>خطأ فادح في إعدادات التطبيق.</h1><p>لا يمكن تشغيل التطبيق. يرجى مراجعة إعدادات Firebase في الكود.</p><p>${e.message}</p></div>`;
     }
 </script>
 
