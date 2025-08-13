@@ -12,50 +12,34 @@
             --text-color: #e0e0e0;
             --sent-bubble: #005c4b;
             --received-bubble: #202c33;
-            --page-background: #0b141a;
             --danger-red: #f15c5c;
         }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        html, body {
-            margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
-            background: var(--primary-bg); color: var(--text-color);
-            height: 100%; width: 100%; overflow: hidden;
-        }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        html, body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: var(--primary-bg); color: var(--text-color); height: 100%; width: 100%; overflow: hidden; }
         .page { display: none; width: 100%; height: 100%; flex-direction: column; background: var(--primary-bg); position: absolute; top: 0; left: 0; }
         .page.active { display: flex; }
         header { background: var(--secondary-bg); padding: 10px 15px; display: flex; align-items: center; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
         .content { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; overflow-y: auto; }
         button { padding: 12px 25px; background: var(--accent-green); color: white; font-weight: bold; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; margin-top: 15px; }
-        input[type="text"], input[type="tel"], input[type="search"] {
-            width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--secondary-bg);
-            background: var(--secondary-bg); color: white; text-align: center; font-size: 16px;
-        }
+        input[type="text"], input[type="tel"], input[type="search"] { width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--secondary-bg); background: var(--secondary-bg); color: white; text-align: center; font-size: 16px; }
         .back-button { color: white; font-size: 24px; background: none; border: none; cursor: pointer; padding: 0 15px 0 5px; margin: 0; }
-
-        /* Profile Picture styles */
         .profile-pic-container { position: relative; width: 150px; height: 150px; margin-bottom: 20px; flex-shrink: 0; }
         .profile-pic-preview { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--secondary-bg); background: #333; }
         .profile-pic-overlay { position: absolute; bottom: 5px; left: 5px; width: 40px; height: 40px; background: var(--accent-green); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 20px; }
-
-        /* Chat List Page */
         #chat-list-page-header { justify-content: space-between; }
         #my-profile-button { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; cursor: pointer; background: #333; }
         #chat-list-page .content { padding: 0; width: 100%; }
-        #search-container { padding: 8px; background: var(--primary-bg); width: 100%; box-sizing: border-box; }
-        #search-input { width: 100%; box-sizing: border-box; padding: 10px 15px; background: var(--secondary-bg); border: none; color: white; border-radius: 8px; }
+        
+        /* UPDATED: Search form style */
+        #search-form { display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--primary-bg); width: 100%; box-sizing: border-box; }
+        #search-input { margin: 0; flex-grow: 1; text-align: right; }
+        #search-button { margin: 0; padding: 10px 20px; width: auto; }
+
         #contacts-container { flex-grow: 1; overflow-y: auto; width: 100%; }
         .contact-item { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid #1a242a; cursor: pointer; text-align: right; width: 100%; box-sizing: border-box; }
         .contact-item:hover { background: #2a3942; }
         .contact-item img { width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; background: #333; }
         #no-contacts-message { padding: 40px 20px; color: #8696a0; }
-
-        /* Chat Page */
         #chat-page { background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png"); }
         #chat-page-header { justify-content: flex-start; }
         #chat-partner-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #333; margin-left: 10px; }
@@ -65,25 +49,12 @@
         .message audio { width: 250px; filter: invert(1) sepia(1) saturate(0) hue-rotate(180deg); }
         .sent { background: var(--sent-bubble); align-self: flex-end; }
         .received { background: var(--received-bubble); align-self: flex-start; }
-
-        /* Message Form & Recording UI */
         #message-form { display: flex; padding: 8px; align-items: center; background: var(--primary-bg); width: 100%; box-sizing: border-box; flex-shrink: 0; }
         #message-input { flex-grow: 1; padding: 12px 15px; border-radius: 20px; border: none; background: var(--secondary-bg); color: white; margin: 0 8px; }
         .action-button { min-width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: var(--accent-green); color: white; font-size: 24px; cursor: pointer; border: none; padding: 0; margin: 0; }
         #attachment-button { background: none; color: #8696a0; font-size: 26px; transform: rotate(45deg); }
-        #record-button, #send-button { display: none; /* Controlled by JS */ }
-        
-        #recording-ui {
-            display: none; /* Hidden by default */
-            flex-grow: 1;
-            height: 48px;
-            background-color: var(--secondary-bg);
-            border-radius: 20px;
-            margin: 0 8px;
-            padding: 0 10px;
-            align-items: center;
-            justify-content: space-between;
-        }
+        #record-button, #send-button { display: none; }
+        #recording-ui { display: none; flex-grow: 1; height: 48px; background-color: var(--secondary-bg); border-radius: 20px; margin: 0 8px; padding: 0 10px; align-items: center; justify-content: space-between; }
         #cancel-record-button { background: none; color: var(--danger-red); font-size: 24px; }
         #recording-status { display: flex; align-items: center; color: var(--text-color); }
         #recording-status .red-dot { color: var(--danger-red); font-size: 16px; animation: pulse 1.5s infinite; margin-left: 8px; }
@@ -94,40 +65,31 @@
 <div id="welcome-page" class="page active"><div class="content"><h2>مرحباً بك في واتساب</h2><p style="color: #a0a0a0;">انقر على "الموافقة والمتابعة" لقبول شروط الخدمة.</p><button id="agree-button">الموافقة والمتابعة</button></div></div>
 <div id="phone-page" class="page"><header><button class="back-button" data-target="welcome-page">→ </button><h1>أدخل رقم هاتفك</h1></header><div class="content"><p style="color: #a0a0a0;">سيقوم واتساب بإرسال رسالة للتحقق من رقم هاتفك.</p><input type="tel" id="phone-input" placeholder="رقم الهاتف"><button id="phone-next-button">التالي</button></div></div>
 <div id="profile-page" class="page"><header><h1>معلومات الملف الشخصي</h1></header><div class="content"><p style="color: #a0a0a0;">الرجاء إدخال اسمك واختيار صورة شخصية.</p><div class="profile-pic-container"><label for="register-pic-input"><img id="register-pic-preview" class="profile-pic-preview" src="https://via.placeholder.com/150/333333/FFFFFF?text=User"><div class="profile-pic-overlay">📷</div></label><input type="file" id="register-pic-input" accept="image/*" style="display:none;"></div><input type="text" id="register-name-input" placeholder="اكتب اسمك هنا"><button id="register-finish-button">إنهاء</button></div></div>
-<div id="chat-list-page" class="page"><header id="chat-list-page-header"><img id="my-profile-button" src="https://via.placeholder.com/150/333333/FFFFFF?text=Me"><h2>الدردشات</h2></header><div class="content"><div id="search-container"><input type="search" id="search-input" placeholder="ابحث عن مستخدم برقم الهاتف..."></div><div id="contacts-container"><div id="no-contacts-message"><h3>لا توجد دردشات بعد</h3><p>ابحث عن مستخدم باستخدام رقم هاتفه لبدء محادثة جديدة.</p></div></div></div></div>
-<div id="profile-settings-page" class="page"><header><button class="back-button" data-target="chat-list-page">→ </button><h1>الملف الشخصي</h1></header><div class="content"><div class="profile-pic-container"><label for="edit-pic-input"><img id="edit-pic-preview" class="profile-pic-preview"><div class="profile-pic-overlay">📷</div></label><input type="file" id="edit-pic-input" accept="image/*" style="display:none;"></div><input type="text" id="edit-name-input" placeholder="الاسم"><input type="tel" id="edit-phone-input" placeholder="رقم الهاتف" readonly style="background:#111b21; text-align:center;"><button id="save-profile-button">حفظ</button></div></div>
 
-<div id="chat-page" class="page">
-    <header id="chat-page-header">
-        <button class="back-button" data-target="chat-list-page">→ </button>
-        <img id="chat-partner-avatar">
-        <h3 id="chat-partner-name" style="margin-right: 15px;"></h3>
+<div id="chat-list-page" class="page">
+    <header id="chat-list-page-header">
+        <img id="my-profile-button" src="https://via.placeholder.com/150/333333/FFFFFF?text=Me">
+        <h2>الدردشات</h2>
     </header>
-    <div id="messages-area"></div>
-    <form id="message-form" onsubmit="return false;">
-        <button type="button" id="attachment-button" class="action-button">📎</button>
-        <input type="file" id="attachment-input" accept="image/*,video/*" style="display:none;">
-        <input type="text" id="message-input" placeholder="رسالة">
-        
-        <div id="recording-ui">
-            <button type="button" id="cancel-record-button" class="action-button" title="إلغاء">🗑️</button>
-            <div id="recording-status">
-                <span id="record-timer">0:00</span>
-                <span class="red-dot">●</span>
-            </div>
+    <div class="content">
+        <form id="search-form" onsubmit="return false;">
+            <input type="search" id="search-input" placeholder="ابحث برقم الهاتف الكامل...">
+            <button type="submit" id="search-button">بحث</button>
+        </form>
+        <div id="contacts-container">
+            <div id="no-contacts-message"><h3>لا توجد دردشات بعد</h3><p>ابحث عن مستخدم باستخدام رقم هاتفه لبدء محادثة جديدة.</p></div>
         </div>
-
-        <button type="button" id="record-button" class="action-button">🎤</button>
-        <button type="submit" id="send-button" class="action-button">➤</button>
-    </form>
+    </div>
 </div>
 
+<div id="profile-settings-page" class="page"><header><button class="back-button" data-target="chat-list-page">→ </button><h1>الملف الشخصي</h1></header><div class="content"><div class="profile-pic-container"><label for="edit-pic-input"><img id="edit-pic-preview" class="profile-pic-preview"><div class="profile-pic-overlay">📷</div></label><input type="file" id="edit-pic-input" accept="image/*" style="display:none;"></div><input type="text" id="edit-name-input" placeholder="الاسم"><input type="tel" id="edit-phone-input" placeholder="رقم الهاتف" readonly style="background:#111b21; text-align:center;"><button id="save-profile-button">حفظ</button></div></div>
+<div id="chat-page" class="page"><header id="chat-page-header"><button class="back-button" data-target="chat-list-page">→ </button><img id="chat-partner-avatar"><h3 id="chat-partner-name" style="margin-right: 15px;"></h3></header><div id="messages-area"></div><form id="message-form" onsubmit="return false;"><button type="button" id="attachment-button" class="action-button">📎</button><input type="file" id="attachment-input" accept="image/*,video/*" style="display:none;"><input type="text" id="message-input" placeholder="رسالة"><div id="recording-ui"><button type="button" id="cancel-record-button" class="action-button" title="إلغاء">🗑️</button><div id="recording-status"><span id="record-timer">0:00</span><span class="red-dot">●</span></div></div><button type="button" id="record-button" class="action-button">🎤</button><button type="submit" id="send-button" class="action-button">➤</button></form></div>
+
+
 <script type="module">
-    // Firebase Imports (same as before)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, set, get, push, onValue, off, query, orderByChild, equalTo, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    // Firebase Config (same as before)
     const firebaseConfig = {
         apiKey: "AIzaSyCcqpstSz3Wg6zQb_-bC0JyjcJjX5c3TQ8",
         authDomain: "saifsa-d4bee.firebaseapp.com",
@@ -142,79 +104,56 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // State Variables
+        // State Variables & UI elements are the same as the previous code
         let currentUser = null, activeChatPartner = null, registrationData = { avatar: "https://via.placeholder.com/150/333333/FFFFFF?text=User" };
         let currentMessagesRef = null, currentMessagesListener = null;
         let mediaRecorder, audioChunks = [], recordTimerInterval, isRecording = false;
 
-        // UI Elements (same structure as before, with new elements)
         const ui = {
-            // ... (all previous ui elements)
-            pages: document.querySelectorAll('.page'),
-            backButtons: document.querySelectorAll('.back-button'),
-            agreeButton: document.getElementById('agree-button'),
-            phoneNextButton: document.getElementById('phone-next-button'),
-            phoneInput: document.getElementById('phone-input'),
-            registerPicInput: document.getElementById('register-pic-input'),
-            registerPicPreview: document.getElementById('register-pic-preview'),
-            registerNameInput: document.getElementById('register-name-input'),
-            registerFinishButton: document.getElementById('register-finish-button'),
-            myProfileButton: document.getElementById('my-profile-button'),
-            searchInput: document.getElementById('search-input'),
-            contactsContainer: document.getElementById('contacts-container'),
-            noContactsMessage: document.getElementById('no-contacts-message'),
-            editPicPreview: document.getElementById('edit-pic-preview'),
-            editPicInput: document.getElementById('edit-pic-input'),
-            editNameInput: document.getElementById('edit-name-input'),
-            editPhoneInput: document.getElementById('edit-phone-input'),
-            saveProfileButton: document.getElementById('save-profile-button'),
-            chatPartnerName: document.getElementById('chat-partner-name'),
-            chatPartnerAvatar: document.getElementById('chat-partner-avatar'),
-            messagesArea: document.getElementById('messages-area'),
-            messageForm: document.getElementById('message-form'),
-            messageInput: document.getElementById('message-input'),
-            sendButton: document.getElementById('send-button'),
-            recordButton: document.getElementById('record-button'),
-            attachmentButton: document.getElementById('attachment-button'),
-            attachmentInput: document.getElementById('attachment-input'),
-            // New Recording UI elements
-            recordingUi: document.getElementById('recording-ui'),
-            cancelRecordButton: document.getElementById('cancel-record-button'),
-            recordTimer: document.getElementById('record-timer')
+            pages: document.querySelectorAll('.page'), backButtons: document.querySelectorAll('.back-button'), agreeButton: document.getElementById('agree-button'), phoneNextButton: document.getElementById('phone-next-button'), phoneInput: document.getElementById('phone-input'), registerPicInput: document.getElementById('register-pic-input'), registerPicPreview: document.getElementById('register-pic-preview'), registerNameInput: document.getElementById('register-name-input'), registerFinishButton: document.getElementById('register-finish-button'), myProfileButton: document.getElementById('my-profile-button'),
+            // Search form elements
+            searchForm: document.getElementById('search-form'), searchInput: document.getElementById('search-input'),
+            contactsContainer: document.getElementById('contacts-container'), noContactsMessage: document.getElementById('no-contacts-message'), editPicPreview: document.getElementById('edit-pic-preview'), editPicInput: document.getElementById('edit-pic-input'), editNameInput: document.getElementById('edit-name-input'), editPhoneInput: document.getElementById('edit-phone-input'), saveProfileButton: document.getElementById('save-profile-button'), chatPartnerName: document.getElementById('chat-partner-name'), chatPartnerAvatar: document.getElementById('chat-partner-avatar'), messagesArea: document.getElementById('messages-area'), messageForm: document.getElementById('message-form'), messageInput: document.getElementById('message-input'), sendButton: document.getElementById('send-button'), recordButton: document.getElementById('record-button'), attachmentButton: document.getElementById('attachment-button'), attachmentInput: document.getElementById('attachment-input'), recordingUi: document.getElementById('recording-ui'), cancelRecordButton: document.getElementById('cancel-record-button'), recordTimer: document.getElementById('record-timer')
         };
         
-        // --- Core Functions (Navigate, Base64) ---
+        // --- Core Functions (Navigate, Base64) are the same ---
         const navigateTo = (pageId) => { ui.pages.forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); };
         const fileToBase64 = (file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
 
-        // --- App Initialization & Login/Registration ---
-        // (This section is unchanged from the previous version)
+        // --- App Initialization & Login/Registration --- (Unchanged)
         const startApp = async () => { const savedUserId = localStorage.getItem('whatsapp_currentUser_id'); if (savedUserId) { try { const snapshot = await get(ref(database, 'users/' + savedUserId)); if (snapshot.exists()) { currentUser = snapshot.val(); initializeAppUI(); navigateTo('chat-list-page'); } else { localStorage.removeItem('whatsapp_currentUser_id'); navigateTo('welcome-page'); } } catch (error) { console.error("DB connection failed:", error); alert("فشل الاتصال بقاعدة البيانات."); navigateTo('welcome-page'); } } else { navigateTo('welcome-page'); } };
         ui.agreeButton.onclick = () => navigateTo('phone-page');
         ui.phoneNextButton.onclick = async () => { const phone = ui.phoneInput.value.trim(); if (phone.length < 9) { alert('الرجاء إدخال رقم هاتف صحيح'); return; } const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(phone)); const snapshot = await get(usersQuery); if (snapshot.exists()) { alert("هذا الرقم مسجل بالفعل. سيتم تسجيل دخولك."); snapshot.forEach(child => { currentUser = child.val(); }); localStorage.setItem('whatsapp_currentUser_id', currentUser.id); initializeAppUI(); navigateTo('chat-list-page'); } else { registrationData.phone = phone; navigateTo('profile-page'); } };
         ui.registerPicInput.onchange = async (e) => { const file = e.target.files[0]; if (file) { ui.registerPicPreview.src = await fileToBase64(file); registrationData.avatar = ui.registerPicPreview.src; } };
         ui.registerFinishButton.onclick = async () => { const name = ui.registerNameInput.value.trim(); if (!name) { alert('الرجاء إدخال اسمك'); return; } registrationData.name = name; const userId = `user_${Date.now()}`; const newUser = { id: userId, ...registrationData }; try { await set(ref(database, 'users/' + userId), newUser); currentUser = newUser; localStorage.setItem('whatsapp_currentUser_id', currentUser.id); alert(`تم تسجيل "${name}" بنجاح!`); initializeAppUI(); navigateTo('chat-list-page'); } catch (error) { console.error("Error saving user:", error); alert("حدث خطأ أثناء التسجيل."); } };
         const initializeAppUI = () => { if (!currentUser) return; ui.myProfileButton.src = currentUser.avatar; };
-        
-        // --- NEW: Chat List & Search Logic ---
-        ui.searchInput.oninput = async () => {
+
+        // --- UPDATED: Search Logic with Button Click ---
+        ui.searchForm.onsubmit = async () => {
             const searchTerm = ui.searchInput.value.trim();
             if (!searchTerm) {
-                ui.contactsContainer.innerHTML = ''; // Clear results
-                ui.noContactsMessage.style.display = 'block'; // Show default message
+                alert("الرجاء إدخال رقم هاتف للبحث.");
                 return;
             }
 
+            ui.contactsContainer.innerHTML = '<p style="color:#8696a0; padding: 20px;">جاري البحث...</p>';
+            ui.noContactsMessage.style.display = 'none';
+
+            // هذا هو الاستعلام الذي يقوم بالبحث بالتطابق الكامل
+            // This query performs an exact match search.
+            // It is the Realtime Database equivalent of Firestore's where("phone", "==", searchTerm)
             const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(searchTerm));
             const snapshot = await get(usersQuery);
             
-            ui.contactsContainer.innerHTML = ''; // Clear previous results
-            ui.noContactsMessage.style.display = 'none'; // Hide default message
+            ui.contactsContainer.innerHTML = ''; // Clear "Searching..." message
 
             if (snapshot.exists()) {
                 snapshot.forEach(child => {
                     const user = child.val();
-                    if (user.id === currentUser.id) return; 
+                    if (user.id === currentUser.id) { // If user searches for themselves
+                        ui.contactsContainer.innerHTML = '<p style="color:#8696a0; padding: 20px;">لا يمكنك بدء محادثة مع نفسك.</p>';
+                        return;
+                    }
 
                     const contactDiv = document.createElement('div');
                     contactDiv.className = 'contact-item';
@@ -222,104 +161,21 @@
                     contactDiv.onclick = () => openChat(user);
                     ui.contactsContainer.appendChild(contactDiv);
                 });
-                if(ui.contactsContainer.innerHTML === '') {
-                     ui.contactsContainer.innerHTML = '<p style="color:#8696a0; padding: 20px;">لم يتم العثور على مستخدم بهذا الرقم.</p>';
-                }
             } else {
                 ui.contactsContainer.innerHTML = '<p style="color:#8696a0; padding: 20px;">لم يتم العثور على مستخدم بهذا الرقم.</p>';
             }
         };
 
-        // --- Chat Logic (openChat, loadAndListen, sendMessage, displayMessage) ---
-        // (This section is unchanged from the previous version)
+        // --- Chat Logic & Voice Recording Logic --- (Unchanged from previous version)
         const openChat = (partner) => { activeChatPartner = partner; ui.chatPartnerName.textContent = partner.name; ui.chatPartnerAvatar.src = partner.avatar; navigateTo('chat-page'); loadAndListenForMessages(); };
         const loadAndListenForMessages = () => { if (currentMessagesRef && currentMessagesListener) { off(currentMessagesRef, 'value', currentMessagesListener); } const chatId = [currentUser.id, activeChatPartner.id].sort().join('_'); currentMessagesRef = query(ref(database, 'messages/' + chatId), orderByChild('timestamp')); ui.messagesArea.innerHTML = ''; currentMessagesListener = onValue(currentMessagesRef, (snapshot) => { ui.messagesArea.innerHTML = ''; if (snapshot.exists()) { snapshot.forEach(child => { displayMessage(child.val()); }); } ui.messagesArea.scrollTop = ui.messagesArea.scrollHeight; }, (error) => console.error("Error listening for messages:", error)); };
         const sendMessage = async (messageData) => { if (!messageData.content) return; const chatId = [currentUser.id, activeChatPartner.id].sort().join('_'); const fullMessage = { ...messageData, senderId: currentUser.id, receiverId: activeChatPartner.id, timestamp: serverTimestamp() }; try { await push(ref(database, 'messages/' + chatId), fullMessage); } catch(e) { console.error("Message send error:", e); alert("فشل إرسال الرسالة"); } };
         const displayMessage = (msg) => { const div = document.createElement('div'); div.className = `message ${msg.senderId === currentUser.id ? 'sent' : 'received'}`; let contentHtml = ''; switch(msg.type) { case 'text': contentHtml = msg.content.replace(/\n/g, '<br>'); break; case 'image': contentHtml = `<img src="${msg.content}" alt="صورة">`; break; case 'audio': contentHtml = `<audio controls src="${msg.content}"></audio>`; break; default: contentHtml = 'رسالة غير مدعومة'; } div.innerHTML = contentHtml; ui.messagesArea.appendChild(div); };
-        
-        // --- NEW: Message Form & Voice Recording UI Logic ---
-        const setRecordingUI = (isRecordingActive) => {
-            isRecording = isRecordingActive;
-            ui.messageInput.style.display = isRecordingActive ? 'none' : 'flex';
-            ui.attachmentButton.style.display = isRecordingActive ? 'none' : 'flex';
-            ui.recordingUi.style.display = isRecordingActive ? 'flex' : 'none';
-            ui.messageInput.dispatchEvent(new Event('input')); // Update buttons after state change
-        };
-
-        ui.messageInput.oninput = () => {
-            if (isRecording) return; // Don't change buttons while recording
-            const hasText = ui.messageInput.value.trim() !== '';
-            ui.sendButton.style.display = hasText ? 'flex' : 'none';
-            ui.recordButton.style.display = hasText ? 'none' : 'flex';
-        };
-
-        ui.messageForm.onsubmit = () => {
-            if (isRecording) { // If form is submitted while recording, send the audio
-                 if (mediaRecorder && mediaRecorder.state === "recording") {
-                    mediaRecorder.stop();
-                }
-            } else { // Send text message
-                const text = ui.messageInput.value.trim();
-                if (text) {
-                    sendMessage({ type: 'text', content: text });
-                    ui.messageInput.value = '';
-                    ui.messageInput.dispatchEvent(new Event('input'));
-                }
-            }
-            return false;
-        };
-
-        ui.recordButton.onclick = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                mediaRecorder.start();
-                setRecordingUI(true);
-
-                let seconds = 0;
-                ui.recordTimer.textContent = '0:00';
-                recordTimerInterval = setInterval(() => {
-                    seconds++;
-                    const mins = Math.floor(seconds / 60);
-                    const secs = seconds % 60;
-                    ui.recordTimer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                }, 1000);
-
-                mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
-                mediaRecorder.onstop = async () => {
-                    clearInterval(recordTimerInterval);
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const base64Audio = await fileToBase64(audioBlob);
-                    sendMessage({ type: 'audio', content: base64Audio });
-                    setRecordingUI(false);
-                    // Stop all tracks on the stream to turn off mic indicator
-                    stream.getTracks().forEach(track => track.stop());
-                };
-
-            } catch (error) {
-                console.error("Microphone access error:", error);
-                alert("لا يمكن الوصول إلى الميكروفون. الرجاء منح الإذن.");
-                setRecordingUI(false);
-            }
-        };
-
-        ui.cancelRecordButton.onclick = () => {
-            if (mediaRecorder && mediaRecorder.state === "recording") {
-                // Set onstop to null to prevent sending the data
-                mediaRecorder.onstop = () => {
-                    // Stop all tracks on the stream to turn off mic indicator
-                     if(mediaRecorder.stream) mediaRecorder.stream.getTracks().forEach(track => track.stop());
-                };
-                mediaRecorder.stop();
-            }
-            clearInterval(recordTimerInterval);
-            audioChunks = [];
-            setRecordingUI(false);
-        };
-        
-        // --- Other event listeners (Attachments, Profile Settings) ---
-        // (This section is unchanged from the previous version)
+        const setRecordingUI = (isRecordingActive) => { isRecording = isRecordingActive; ui.messageInput.style.display = isRecordingActive ? 'none' : 'flex'; ui.attachmentButton.style.display = isRecordingActive ? 'none' : 'flex'; ui.recordingUi.style.display = isRecordingActive ? 'flex' : 'none'; ui.messageInput.dispatchEvent(new Event('input')); };
+        ui.messageInput.oninput = () => { if (isRecording) return; const hasText = ui.messageInput.value.trim() !== ''; ui.sendButton.style.display = hasText ? 'flex' : 'none'; ui.recordButton.style.display = hasText ? 'none' : 'flex'; };
+        ui.messageForm.onsubmit = () => { if (isRecording) { if (mediaRecorder && mediaRecorder.state === "recording") { mediaRecorder.stop(); } } else { const text = ui.messageInput.value.trim(); if (text) { sendMessage({ type: 'text', content: text }); ui.messageInput.value = ''; ui.messageInput.dispatchEvent(new Event('input')); } } return false; };
+        ui.recordButton.onclick = async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); mediaRecorder = new MediaRecorder(stream); audioChunks = []; mediaRecorder.start(); setRecordingUI(true); let seconds = 0; ui.recordTimer.textContent = '0:00'; recordTimerInterval = setInterval(() => { seconds++; const mins = Math.floor(seconds / 60); const secs = seconds % 60; ui.recordTimer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`; }, 1000); mediaRecorder.ondataavailable = event => audioChunks.push(event.data); mediaRecorder.onstop = async () => { clearInterval(recordTimerInterval); const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); const base64Audio = await fileToBase64(audioBlob); sendMessage({ type: 'audio', content: base64Audio }); setRecordingUI(false); stream.getTracks().forEach(track => track.stop()); }; } catch (error) { console.error("Microphone access error:", error); alert("لا يمكن الوصول إلى الميكروفون. الرجاء منح الإذن."); setRecordingUI(false); } };
+        ui.cancelRecordButton.onclick = () => { if (mediaRecorder && mediaRecorder.state === "recording") { mediaRecorder.onstop = () => { if(mediaRecorder.stream) mediaRecorder.stream.getTracks().forEach(track => track.stop()); }; mediaRecorder.stop(); } clearInterval(recordTimerInterval); audioChunks = []; setRecordingUI(false); };
         ui.attachmentButton.onclick = () => ui.attachmentInput.click();
         ui.attachmentInput.onchange = async (e) => { const file = e.target.files[0]; if (file) { const base64Content = await fileToBase64(file); const type = file.type.startsWith('image/') ? 'image' : 'video'; if (type === 'video') { alert("ميزة إرسال الفيديو غير مدعومة حالياً."); return; } sendMessage({ type: 'image', content: base64Content }); } e.target.value = null; };
         ui.myProfileButton.onclick = () => { ui.editPicPreview.src = currentUser.avatar; ui.editNameInput.value = currentUser.name; ui.editPhoneInput.value = currentUser.phone; navigateTo('profile-settings-page'); };
@@ -329,7 +185,7 @@
 
         // Initialize App
         startApp();
-        ui.messageInput.dispatchEvent(new Event('input')); // Initial button setup
+        ui.messageInput.dispatchEvent(new Event('input'));
 
     } catch (e) {
         console.error("Firebase init failed.", e);
