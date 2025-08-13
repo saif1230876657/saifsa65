@@ -29,12 +29,9 @@
         #chat-list-page-header { justify-content: space-between; }
         #my-profile-button { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; cursor: pointer; background: #333; }
         #chat-list-page .content { padding: 0; width: 100%; }
-        
-        /* UPDATED: Search form style */
         #search-form { display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--primary-bg); width: 100%; box-sizing: border-box; }
         #search-input { margin: 0; flex-grow: 1; text-align: right; }
         #search-button { margin: 0; padding: 10px 20px; width: auto; }
-
         #contacts-container { flex-grow: 1; overflow-y: auto; width: 100%; }
         .contact-item { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid #1a242a; cursor: pointer; text-align: right; width: 100%; box-sizing: border-box; }
         .contact-item:hover { background: #2a3942; }
@@ -67,24 +64,18 @@
 <div id="profile-page" class="page"><header><h1>معلومات الملف الشخصي</h1></header><div class="content"><p style="color: #a0a0a0;">الرجاء إدخال اسمك واختيار صورة شخصية.</p><div class="profile-pic-container"><label for="register-pic-input"><img id="register-pic-preview" class="profile-pic-preview" src="https://via.placeholder.com/150/333333/FFFFFF?text=User"><div class="profile-pic-overlay">📷</div></label><input type="file" id="register-pic-input" accept="image/*" style="display:none;"></div><input type="text" id="register-name-input" placeholder="اكتب اسمك هنا"><button id="register-finish-button">إنهاء</button></div></div>
 
 <div id="chat-list-page" class="page">
-    <header id="chat-list-page-header">
-        <img id="my-profile-button" src="https://via.placeholder.com/150/333333/FFFFFF?text=Me">
-        <h2>الدردشات</h2>
-    </header>
+    <header id="chat-list-page-header"><img id="my-profile-button" src="https://via.placeholder.com/150/333333/FFFFFF?text=Me"><h2>الدردشات</h2></header>
     <div class="content">
-        <form id="search-form" onsubmit="return false;">
+        <form id="search-form">
             <input type="search" id="search-input" placeholder="ابحث برقم الهاتف الكامل...">
             <button type="submit" id="search-button">بحث</button>
         </form>
-        <div id="contacts-container">
-            <div id="no-contacts-message"><h3>لا توجد دردشات بعد</h3><p>ابحث عن مستخدم باستخدام رقم هاتفه لبدء محادثة جديدة.</p></div>
-        </div>
+        <div id="contacts-container"><div id="no-contacts-message"><h3>لا توجد دردشات بعد</h3><p>ابحث عن مستخدم باستخدام رقم هاتفه لبدء محادثة جديدة.</p></div></div>
     </div>
 </div>
 
 <div id="profile-settings-page" class="page"><header><button class="back-button" data-target="chat-list-page">→ </button><h1>الملف الشخصي</h1></header><div class="content"><div class="profile-pic-container"><label for="edit-pic-input"><img id="edit-pic-preview" class="profile-pic-preview"><div class="profile-pic-overlay">📷</div></label><input type="file" id="edit-pic-input" accept="image/*" style="display:none;"></div><input type="text" id="edit-name-input" placeholder="الاسم"><input type="tel" id="edit-phone-input" placeholder="رقم الهاتف" readonly style="background:#111b21; text-align:center;"><button id="save-profile-button">حفظ</button></div></div>
 <div id="chat-page" class="page"><header id="chat-page-header"><button class="back-button" data-target="chat-list-page">→ </button><img id="chat-partner-avatar"><h3 id="chat-partner-name" style="margin-right: 15px;"></h3></header><div id="messages-area"></div><form id="message-form" onsubmit="return false;"><button type="button" id="attachment-button" class="action-button">📎</button><input type="file" id="attachment-input" accept="image/*,video/*" style="display:none;"><input type="text" id="message-input" placeholder="رسالة"><div id="recording-ui"><button type="button" id="cancel-record-button" class="action-button" title="إلغاء">🗑️</button><div id="recording-status"><span id="record-timer">0:00</span><span class="red-dot">●</span></div></div><button type="button" id="record-button" class="action-button">🎤</button><button type="submit" id="send-button" class="action-button">➤</button></form></div>
-
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -103,24 +94,21 @@
     try {
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-
-        // State Variables & UI elements are the same as the previous code
+        
+        // ... State Variables & UI elements are the same ...
         let currentUser = null, activeChatPartner = null, registrationData = { avatar: "https://via.placeholder.com/150/333333/FFFFFF?text=User" };
         let currentMessagesRef = null, currentMessagesListener = null;
         let mediaRecorder, audioChunks = [], recordTimerInterval, isRecording = false;
 
         const ui = {
             pages: document.querySelectorAll('.page'), backButtons: document.querySelectorAll('.back-button'), agreeButton: document.getElementById('agree-button'), phoneNextButton: document.getElementById('phone-next-button'), phoneInput: document.getElementById('phone-input'), registerPicInput: document.getElementById('register-pic-input'), registerPicPreview: document.getElementById('register-pic-preview'), registerNameInput: document.getElementById('register-name-input'), registerFinishButton: document.getElementById('register-finish-button'), myProfileButton: document.getElementById('my-profile-button'),
-            // Search form elements
             searchForm: document.getElementById('search-form'), searchInput: document.getElementById('search-input'),
             contactsContainer: document.getElementById('contacts-container'), noContactsMessage: document.getElementById('no-contacts-message'), editPicPreview: document.getElementById('edit-pic-preview'), editPicInput: document.getElementById('edit-pic-input'), editNameInput: document.getElementById('edit-name-input'), editPhoneInput: document.getElementById('edit-phone-input'), saveProfileButton: document.getElementById('save-profile-button'), chatPartnerName: document.getElementById('chat-partner-name'), chatPartnerAvatar: document.getElementById('chat-partner-avatar'), messagesArea: document.getElementById('messages-area'), messageForm: document.getElementById('message-form'), messageInput: document.getElementById('message-input'), sendButton: document.getElementById('send-button'), recordButton: document.getElementById('record-button'), attachmentButton: document.getElementById('attachment-button'), attachmentInput: document.getElementById('attachment-input'), recordingUi: document.getElementById('recording-ui'), cancelRecordButton: document.getElementById('cancel-record-button'), recordTimer: document.getElementById('record-timer')
         };
         
-        // --- Core Functions (Navigate, Base64) are the same ---
+        // --- Core Functions, Login/Registration, etc. are unchanged ---
         const navigateTo = (pageId) => { ui.pages.forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); };
         const fileToBase64 = (file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
-
-        // --- App Initialization & Login/Registration --- (Unchanged)
         const startApp = async () => { const savedUserId = localStorage.getItem('whatsapp_currentUser_id'); if (savedUserId) { try { const snapshot = await get(ref(database, 'users/' + savedUserId)); if (snapshot.exists()) { currentUser = snapshot.val(); initializeAppUI(); navigateTo('chat-list-page'); } else { localStorage.removeItem('whatsapp_currentUser_id'); navigateTo('welcome-page'); } } catch (error) { console.error("DB connection failed:", error); alert("فشل الاتصال بقاعدة البيانات."); navigateTo('welcome-page'); } } else { navigateTo('welcome-page'); } };
         ui.agreeButton.onclick = () => navigateTo('phone-page');
         ui.phoneNextButton.onclick = async () => { const phone = ui.phoneInput.value.trim(); if (phone.length < 9) { alert('الرجاء إدخال رقم هاتف صحيح'); return; } const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(phone)); const snapshot = await get(usersQuery); if (snapshot.exists()) { alert("هذا الرقم مسجل بالفعل. سيتم تسجيل دخولك."); snapshot.forEach(child => { currentUser = child.val(); }); localStorage.setItem('whatsapp_currentUser_id', currentUser.id); initializeAppUI(); navigateTo('chat-list-page'); } else { registrationData.phone = phone; navigateTo('profile-page'); } };
@@ -128,8 +116,11 @@
         ui.registerFinishButton.onclick = async () => { const name = ui.registerNameInput.value.trim(); if (!name) { alert('الرجاء إدخال اسمك'); return; } registrationData.name = name; const userId = `user_${Date.now()}`; const newUser = { id: userId, ...registrationData }; try { await set(ref(database, 'users/' + userId), newUser); currentUser = newUser; localStorage.setItem('whatsapp_currentUser_id', currentUser.id); alert(`تم تسجيل "${name}" بنجاح!`); initializeAppUI(); navigateTo('chat-list-page'); } catch (error) { console.error("Error saving user:", error); alert("حدث خطأ أثناء التسجيل."); } };
         const initializeAppUI = () => { if (!currentUser) return; ui.myProfileButton.src = currentUser.avatar; };
 
-        // --- UPDATED: Search Logic with Button Click ---
-        ui.searchForm.onsubmit = async () => {
+        // ########## THE FIX IS HERE ##########
+        // --- UPDATED: Search Logic with Reload Fix ---
+        ui.searchForm.onsubmit = async (event) => { // تم إضافة (event)
+            event.preventDefault(); // هذا السطر هو الحل لمنع إعادة تحميل الصفحة
+
             const searchTerm = ui.searchInput.value.trim();
             if (!searchTerm) {
                 alert("الرجاء إدخال رقم هاتف للبحث.");
@@ -139,22 +130,18 @@
             ui.contactsContainer.innerHTML = '<p style="color:#8696a0; padding: 20px;">جاري البحث...</p>';
             ui.noContactsMessage.style.display = 'none';
 
-            // هذا هو الاستعلام الذي يقوم بالبحث بالتطابق الكامل
-            // This query performs an exact match search.
-            // It is the Realtime Database equivalent of Firestore's where("phone", "==", searchTerm)
             const usersQuery = query(ref(database, 'users'), orderByChild('phone'), equalTo(searchTerm));
             const snapshot = await get(usersQuery);
             
-            ui.contactsContainer.innerHTML = ''; // Clear "Searching..." message
+            ui.contactsContainer.innerHTML = ''; 
 
             if (snapshot.exists()) {
                 snapshot.forEach(child => {
                     const user = child.val();
-                    if (user.id === currentUser.id) { // If user searches for themselves
+                    if (user.id === currentUser.id) {
                         ui.contactsContainer.innerHTML = '<p style="color:#8696a0; padding: 20px;">لا يمكنك بدء محادثة مع نفسك.</p>';
                         return;
                     }
-
                     const contactDiv = document.createElement('div');
                     contactDiv.className = 'contact-item';
                     contactDiv.innerHTML = `<img src="${user.avatar}" alt="${user.name}"><div><h4>${user.name}</h4><p style="color:#a0a0a0; font-size:14px;">${user.phone}</p></div>`;
@@ -166,7 +153,7 @@
             }
         };
 
-        // --- Chat Logic & Voice Recording Logic --- (Unchanged from previous version)
+        // --- All other functions (Chat, Voice Recording, etc.) are unchanged ---
         const openChat = (partner) => { activeChatPartner = partner; ui.chatPartnerName.textContent = partner.name; ui.chatPartnerAvatar.src = partner.avatar; navigateTo('chat-page'); loadAndListenForMessages(); };
         const loadAndListenForMessages = () => { if (currentMessagesRef && currentMessagesListener) { off(currentMessagesRef, 'value', currentMessagesListener); } const chatId = [currentUser.id, activeChatPartner.id].sort().join('_'); currentMessagesRef = query(ref(database, 'messages/' + chatId), orderByChild('timestamp')); ui.messagesArea.innerHTML = ''; currentMessagesListener = onValue(currentMessagesRef, (snapshot) => { ui.messagesArea.innerHTML = ''; if (snapshot.exists()) { snapshot.forEach(child => { displayMessage(child.val()); }); } ui.messagesArea.scrollTop = ui.messagesArea.scrollHeight; }, (error) => console.error("Error listening for messages:", error)); };
         const sendMessage = async (messageData) => { if (!messageData.content) return; const chatId = [currentUser.id, activeChatPartner.id].sort().join('_'); const fullMessage = { ...messageData, senderId: currentUser.id, receiverId: activeChatPartner.id, timestamp: serverTimestamp() }; try { await push(ref(database, 'messages/' + chatId), fullMessage); } catch(e) { console.error("Message send error:", e); alert("فشل إرسال الرسالة"); } };
@@ -183,10 +170,8 @@
         ui.saveProfileButton.onclick = async () => { const newName = ui.editNameInput.value.trim(); const newAvatar = ui.editPicPreview.src; if(!newName) { alert("الاسم لا يمكن أن يكون فارغاً"); return; } const updatedData = { ...currentUser, name: newName, avatar: newAvatar }; try { await set(ref(database, 'users/' + currentUser.id), updatedData); currentUser = updatedData; alert("تم حفظ التغييرات!"); initializeAppUI(); navigateTo('chat-list-page'); } catch(error) { console.error("Profile update error:", error); alert("فشل تحديث الملف الشخصي."); } };
         ui.backButtons.forEach(b => { b.onclick = () => { if (isRecording) ui.cancelRecordButton.click(); if (currentMessagesRef && currentMessagesListener) { off(currentMessagesRef, 'value', currentMessagesListener); currentMessagesRef = null; currentMessagesListener = null; } navigateTo(b.dataset.target); }; });
 
-        // Initialize App
         startApp();
         ui.messageInput.dispatchEvent(new Event('input'));
-
     } catch (e) {
         console.error("Firebase init failed.", e);
         document.body.innerHTML = `<div style="text-align:center; padding: 40px; color: red;"><h1>خطأ فادح في إعدادات التطبيق.</h1><p>لا يمكن تشغيل التطبيق. يرجى مراجعة إعدادات Firebase في الكود.</p><p>${e.message}</p></div>`;
