@@ -21,7 +21,6 @@
         html, body {
             margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: #090e11; color: var(--text-color); height: 100%; width: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center;
         }
-        /* START: CHANGE 1 - Main container for fixed phone size */
         #main-container {
             width: 100%; height: 100%;
             max-width: 450px; /* Fixed max width for phone-like view */
@@ -33,7 +32,6 @@
             position: relative; overflow: hidden;
         }
         .page { display: none; width: 100%; height: 100%; flex-direction: column; background: var(--primary-bg); position: absolute; top: 0; left: 0; }
-        /* END: CHANGE 1 */
         .page.active { display: flex; }
         header { background: var(--secondary-bg); padding: 10px 15px; display: flex; align-items: center; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
         .content { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; overflow-y: auto; }
@@ -65,17 +63,13 @@
         #chat-partner-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #333; margin-left: 10px; }
         #messages-area { flex-grow: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
         .message { display: flex; flex-direction: column; max-width: 75%; padding: 6px 10px; border-radius: 8px; margin-bottom: 10px; color: white; word-wrap: break-word; line-height: 1.4; position: relative; }
-        .message-content { padding-bottom: 18px; } /* Add padding for meta */
-        /* START: CHANGE 5 - Clickable Image Style */
+        .message-content { padding-bottom: 18px; }
         .message img { max-width: 100%; border-radius: 5px; margin-top: 5px; cursor: pointer; }
-        /* END: CHANGE 5 */
         .message video { max-width: 100%; border-radius: 5px; margin-top: 5px; }
         .message audio { width: 250px; filter: invert(1) sepia(1) saturate(0) hue-rotate(180deg); }
         .message-meta { position: absolute; bottom: 4px; right: 8px; font-size: 11px; color: var(--light-gray); display: flex; align-items: center; }
         .received .message-meta { right: auto; left: 8px; }
-        /* START: CHANGE 2 - Checkmark Icon Size */
         .message-status { margin-left: 4px; font-weight: bold; font-size: 14px; }
-        /* END: CHANGE 2 */
         .status-read { color: var(--status-blue); }
         .sent { background: var(--sent-bubble); align-self: flex-end; }
         .received { background: var(--received-bubble); align-self: flex-start; }
@@ -84,23 +78,15 @@
         .action-button { min-width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: var(--accent-green); color: white; font-size: 24px; cursor: pointer; border: none; padding: 0; margin: 0; }
         #attachment-button { background: none; color: var(--light-gray); font-size: 26px; transform: rotate(45deg); }
         #record-button, #send-button { display: none; }
-        /* START: CHANGE 6 - New Recording UI Style */
         #recording-ui { display: none; flex-grow: 1; height: 48px; background-color: var(--secondary-bg); border-radius: 20px; margin: 0 8px; padding: 0 15px; align-items: center; justify-content: space-between; }
         #recording-status { display: flex; align-items: center; color: var(--text-color); gap: 8px; }
         #recording-status .red-dot { color: var(--danger-red); font-size: 16px; animation: pulse 1.5s infinite; }
-        /* END: CHANGE 6 - This UI is now simplified, we hide/show elements directly in message-form */
-
-        /* START: CHANGE 4 - Code block styling */
         pre { background-color: #0d1117; border: 1px solid var(--secondary-bg); padding: 10px; border-radius: 6px; white-space: pre-wrap; word-wrap: break-word; font-family: 'Courier New', Courier, monospace; text-align: left; direction: ltr; }
         code { color: #c9d1d9; }
-        /* END: CHANGE 4 */
-
-        /* START: CHANGE 5 - Image Viewer Modal Styles */
         #image-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); z-index: 1000; display: none; justify-content: center; align-items: center; flex-direction: column; }
         #image-viewer img { max-width: 90%; max-height: 80%; object-fit: contain; }
         #image-viewer-controls { margin-top: 15px; display: flex; gap: 20px; }
         #image-viewer-controls button, #image-viewer-controls a { padding: 10px 20px; background: var(--secondary-bg); color: white; font-weight: bold; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; text-decoration: none; }
-        /* END: CHANGE 5 */
     </style>
 </head>
 <body>
@@ -144,6 +130,9 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, set, get, push, onValue, off, query, orderByChild, equalTo, serverTimestamp, update, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    // --- START: FCM INTEGRATION ---
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+    // --- END: FCM INTEGRATION ---
 
     const firebaseConfig = {
         apiKey: "AIzaSyCcqpstSz3Wg6zQb_-bC0JyjcJjX5c3TQ8",
@@ -159,6 +148,50 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
         
+        // --- START: FCM INTEGRATION ---
+        const messaging = getMessaging(app);
+
+        // Function to request permission and get token
+        function requestPermission() {
+            console.log('Requesting permission...');
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    console.log('Notification permission granted.');
+                    
+                    // Get token
+                    getToken(messaging, { vapidKey: 'ضع_هنا_مفتاح_VAPID_الخاص_بك' }).then((currentToken) => {
+                        if (currentToken) {
+                            console.log('FCM Token:', currentToken);
+                            // You can now send this token to your server to send notifications
+                            // For example, save it to the user's profile in the database
+                            if (currentUser) {
+                                set(ref(database, `users/${currentUser.id}/fcmToken`), currentToken);
+                            }
+                        } else {
+                            console.log('No registration token available. Request permission to generate one.');
+                        }
+                    }).catch((err) => {
+                        console.log('An error occurred while retrieving token. ', err);
+                    });
+                } else {
+                    console.log('Unable to get permission to notify.');
+                }
+            });
+        }
+        
+        // Handle incoming messages when the app is in the foreground
+        onMessage(messaging, (payload) => {
+            console.log('Message received. ', payload);
+            // Customize notification here
+            new Notification(payload.notification.title, {
+                body: payload.notification.body,
+                icon: payload.notification.icon,
+            });
+        });
+
+        // Call requestPermission once the user is logged in
+        // --- END: FCM INTEGRATION ---
+        
         let currentUser = null, activeChatPartner = null;
         let currentMessagesRef = null, currentMessagesListener = null;
         let userChatsListener = null;
@@ -168,24 +201,19 @@
             pages: document.querySelectorAll('.page'), backButtons: document.querySelectorAll('.back-button'), agreeButton: document.getElementById('agree-button'), phoneNextButton: document.getElementById('phone-next-button'), phoneInput: document.getElementById('phone-input'), registerPicInput: document.getElementById('register-pic-input'), registerPicPreview: document.getElementById('register-pic-preview'), registerNameInput: document.getElementById('register-name-input'), registerFinishButton: document.getElementById('register-finish-button'), myProfileButton: document.getElementById('my-profile-button'),
             searchForm: document.getElementById('search-form'), searchInput: document.getElementById('search-input'),
             contactsContainer: document.getElementById('contacts-container'), noContactsMessage: document.getElementById('no-contacts-message'), editPicPreview: document.getElementById('edit-pic-preview'), editPicInput: document.getElementById('edit-pic-input'), editNameInput: document.getElementById('edit-name-input'), editPhoneInput: document.getElementById('edit-phone-input'), saveProfileButton: document.getElementById('save-profile-button'), chatPartnerName: document.getElementById('chat-partner-name'), chatPartnerAvatar: document.getElementById('chat-partner-avatar'), messagesArea: document.getElementById('messages-area'), messageForm: document.getElementById('message-form'), messageInput: document.getElementById('message-input'), sendButton: document.getElementById('send-button'), recordButton: document.getElementById('record-button'), attachmentButton: document.getElementById('attachment-button'), attachmentInput: document.getElementById('attachment-input'),
-            recordingUi: document.getElementById('recording-ui'), recordTimer: document.getElementById('record-timer'), // Simplified recording UI
-            // --- CHANGE 5: Image viewer elements
+            recordingUi: document.getElementById('recording-ui'), recordTimer: document.getElementById('record-timer'),
             imageViewer: document.getElementById('image-viewer'), viewerImg: document.getElementById('viewer-img'), downloadBtn: document.getElementById('download-btn'), closeViewerBtn: document.getElementById('close-viewer-btn'),
         };
         
         const navigateTo = (pageId) => { ui.pages.forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); };
         const fileToBase64 = (file) => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
         
-        // --- CHANGE 4: Helper function to escape HTML and detect code blocks ---
         const formatMessageText = (text) => {
             const escapeHTML = (str) => str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-            
-            // Check for code blocks ```code```
             const codeBlockRegex = /```([\s\S]*?)```/g;
             let formattedText = escapeHTML(text).replace(codeBlockRegex, (match, code) => {
-                return `</pre><pre><code>${code.trim()}</code></pre><pre>`; // Using <pre> tags to separate
+                return `</pre><pre><code>${code.trim()}</code></pre><pre>`;
             });
-            // This logic can create empty <pre> tags, let's clean it up
             formattedText = `<pre>${formattedText}</pre>`.replace(/<pre><\/pre>/g, '').replace(/\n/g, '<br>');
             if (formattedText.startsWith('<pre>') && formattedText.endsWith('</pre>')) {
                  formattedText = formattedText.substring(5, formattedText.length - 6);
@@ -200,7 +228,7 @@
         ui.registerPicInput.onchange = async (e) => { const file = e.target.files[0]; if (file) { ui.registerPicPreview.src = await fileToBase64(file); registrationData.avatar = ui.registerPicPreview.src; } };
         ui.registerFinishButton.onclick = async () => { const name = ui.registerNameInput.value.trim(); if (!name) { alert('الرجاء إدخال اسمك'); return; } registrationData.name = name; const userId = `user_${Date.now()}`; const newUser = { id: userId, ...registrationData }; await set(ref(database, 'users/' + userId), newUser); currentUser = newUser; localStorage.setItem('whatsapp_currentUser_id', currentUser.id); initializeAppUI(); navigateTo('chat-list-page'); };
         
-        const initializeAppUI = () => { if (!currentUser) return; ui.myProfileButton.src = currentUser.avatar; loadUserChats(); };
+        const initializeAppUI = () => { if (!currentUser) return; ui.myProfileButton.src = currentUser.avatar; loadUserChats(); requestPermission(); /* <-- طلب الإذن بعد تسجيل الدخول */ };
         
         const loadUserChats = () => {
             if (userChatsListener) off(ref(database, `userChats/${currentUser.id}`), 'value', userChatsListener);
@@ -249,7 +277,6 @@
             
             switch(msg.type) {
                 case 'text': contentHtml = formatMessageText(msg.content); break;
-                // --- CHANGE 5: Add onclick to image for viewer
                 case 'image': contentHtml = `<img src="${msg.content}" alt="صورة">`; break;
                 case 'audio': contentHtml = `<audio controls src="${msg.content}"></audio>`; break;
                 default: contentHtml = 'رسالة غير مدعومة';
@@ -261,7 +288,6 @@
             
             div.innerHTML = `<div class="message-content">${contentHtml}</div><div class="message-meta"><span>${messageTime}</span>${statusIcon}</div>`;
             
-            // --- CHANGE 5: Add click listener for the image
             const imgElement = div.querySelector('img');
             if(imgElement) {
                 imgElement.onclick = () => {
@@ -274,7 +300,6 @@
             ui.messagesArea.appendChild(div);
         };
         
-        // --- CHANGE 6: Updated UI logic for recording ---
         const setRecordingUI = (isRecordingActive) => {
             isRecording = isRecordingActive;
             ui.messageInput.style.display = isRecordingActive ? 'none' : 'flex';
@@ -284,7 +309,7 @@
             const hasText = ui.messageInput.value.trim() !== '';
             if (isRecordingActive) {
                 ui.recordButton.style.display = 'none';
-                ui.sendButton.style.display = 'flex'; // Show send button to stop/send recording
+                ui.sendButton.style.display = 'flex';
             } else {
                 ui.sendButton.style.display = hasText ? 'flex' : 'none';
                 ui.recordButton.style.display = hasText ? 'none' : 'flex';
@@ -299,7 +324,6 @@
                     mediaRecorder.stop(); 
                 }
             } else { 
-                // --- CHANGE 3: Limit message length ---
                 let text = ui.messageInput.value.trim();
                 if (text) {
                     if (text.length > 1000) {
@@ -316,8 +340,6 @@
 
         ui.recordButton.onclick = async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); mediaRecorder = new MediaRecorder(stream); audioChunks = []; mediaRecorder.start(); setRecordingUI(true); let seconds = 0; ui.recordTimer.textContent = '0:00'; recordTimerInterval = setInterval(() => { seconds++; const mins = Math.floor(seconds / 60); const secs = seconds % 60; ui.recordTimer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`; }, 1000); mediaRecorder.ondataavailable = event => audioChunks.push(event.data); mediaRecorder.onstop = async () => { clearInterval(recordTimerInterval); const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); const base64Audio = await fileToBase64(audioBlob); sendMessage({ type: 'audio', content: base64Audio }); setRecordingUI(false); stream.getTracks().forEach(track => track.stop()); }; } catch (error) { console.error("Microphone access error:", error); alert("لا يمكن الوصول إلى الميكروفون. الرجاء منح الإذن."); setRecordingUI(false); } };
         
-        // --- You no longer have a cancel button, but if you want to add a way to cancel, you can implement it. For now, sending is the only action.
-        
         ui.attachmentButton.onclick = () => ui.attachmentInput.click();
         ui.attachmentInput.onchange = async (e) => { const file = e.target.files[0]; if (file) { const base64Content = await fileToBase64(file); const type = file.type.startsWith('image/') ? 'image' : 'video'; if (type === 'video') { alert("ميزة إرسال الفيديو غير مدعومة حالياً."); return; } sendMessage({ type: 'image', content: base64Content }); } e.target.value = null; };
         ui.myProfileButton.onclick = () => { ui.editPicPreview.src = currentUser.avatar; ui.editNameInput.value = currentUser.name; ui.editPhoneInput.value = currentUser.phone; navigateTo('profile-settings-page'); };
@@ -325,7 +347,6 @@
         ui.saveProfileButton.onclick = async () => { const newName = ui.editNameInput.value.trim(); const newAvatar = ui.editPicPreview.src; if(!newName) { alert("الاسم لا يمكن أن يكون فارغاً"); return; } const updatedData = { ...currentUser, name: newName, avatar: newAvatar }; await set(ref(database, 'users/' + currentUser.id), updatedData); currentUser = updatedData; alert("تم حفظ التغييرات!"); initializeAppUI(); navigateTo('chat-list-page'); };
         ui.backButtons.forEach(b => { b.onclick = () => { if (isRecording) { if (mediaRecorder && mediaRecorder.state === "recording") { mediaRecorder.onstop = () => { if(mediaRecorder.stream) mediaRecorder.stream.getTracks().forEach(track => track.stop()); }; mediaRecorder.stop(); } clearInterval(recordTimerInterval); audioChunks = []; setRecordingUI(false); } if (currentMessagesRef && currentMessagesListener) { off(currentMessagesRef, 'value', currentMessagesListener); currentMessagesRef = null; currentMessagesListener = null; } navigateTo(b.dataset.target); }; });
         
-        // --- CHANGE 5: Image viewer close button listener
         ui.closeViewerBtn.onclick = () => { ui.imageViewer.style.display = 'none'; };
 
         startApp();
